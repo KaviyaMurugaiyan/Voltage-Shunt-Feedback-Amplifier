@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Active Low-Pass Filter | Analog Electronics Learning Lab</title>
+<style>
+:root{--ink:#17243a;--muted:#5d6b80;--bg:#f3f6fb;--card:#fff;--line:#dce4ef;--blue:#155eef;--teal:#087e8b;--soft:#eaf1ff;--good:#087443;--bad:#b42318;--gold:#9a6700}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(125deg,#10264b,#174f83 65%,#087e8b);color:white;padding:42px max(22px,calc((100% - 1180px)/2)) 36px}
+.eyebrow{letter-spacing:.12em;text-transform:uppercase;font-size:.78rem;font-weight:750;color:#b9d7ff}
+h1{font-size:clamp(2rem,5vw,3.35rem);line-height:1.1;margin:.45rem 0}
+header p{max-width:850px;color:#e3efff;margin:.5rem 0}
+.meta{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.meta span{border:1px solid #ffffff55;background:#ffffff13;border-radius:99px;padding:5px 12px;font-size:.86rem}
+nav{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 3px 12px #10264b0b}
+.navinner{max-width:1180px;margin:auto;padding:9px 18px;display:flex;gap:8px;overflow:auto}
+nav a{white-space:nowrap;text-decoration:none;color:#31445f;font-size:.87rem;font-weight:650;padding:7px 10px;border-radius:8px}nav a:hover{background:var(--soft);color:var(--blue)}
+main{max-width:1180px;margin:26px auto;padding:0 18px 70px}
+section{scroll-margin-top:75px;margin:22px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,30px);box-shadow:0 5px 18px #10264b08}
+h2{font-size:1.55rem;line-height:1.25;margin:0 0 15px;color:#15365d}h3{font-size:1.12rem;margin:20px 0 8px;color:#174b78}h4{margin:12px 0 5px}
+p{margin:8px 0 12px}.muted,.small{color:var(--muted)}.small{font-size:.9rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}
+.tile{background:#f7f9fd;border:1px solid var(--line);padding:15px;border-radius:12px}
+.callout{border-left:4px solid var(--blue);background:#eff5ff;padding:13px 16px;border-radius:8px;margin:14px 0}
+.warn{border-left-color:#d18b00;background:#fff8e7}.success{border-left-color:var(--good);background:#ecfdf3}
+.eq{font-family:Cambria,"Times New Roman",serif;font-size:1.15rem;background:#f5f8fc;border:1px solid var(--line);padding:12px 15px;border-radius:9px;overflow-x:auto;margin:10px 0;text-align:center}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.94rem}th,td{border:1px solid var(--line);padding:10px 11px;text-align:left;vertical-align:top}th{background:#edf3fb;color:#183b63}
+figure{margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fbfcff}figure svg{display:block;width:100%;height:auto}figcaption{font-size:.88rem;color:var(--muted);margin-top:8px}
+ul,ol{padding-left:23px}li{margin:4px 0}
+.pill{display:inline-block;border-radius:99px;padding:2px 9px;font-size:.78rem;font-weight:750;background:#e9f1ff;color:#174b9b}.easy{background:#e8f7ef;color:#087443}.moderate{background:#fff5dc;color:#8a5700}.hard{background:#fcebea;color:#a52820}
+details{border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin:9px 0;background:#fcfdff}summary{cursor:pointer;font-weight:700;color:#204a75}details p{margin-bottom:4px}
+.question{border:1px solid var(--line);border-radius:12px;padding:15px;margin:13px 0}.question legend{font-weight:700;padding:0 5px}.options{display:grid;gap:6px;margin:9px 0}.options label{display:flex;gap:9px;align-items:flex-start;padding:6px 8px;border-radius:7px;cursor:pointer}.options label:hover{background:#f0f5fc}input[type=radio]{margin-top:5px;accent-color:var(--blue)}
+.feedback{padding:9px 11px;border-radius:8px;margin-top:8px;font-size:.92rem}.correct{background:#e9f8ef;color:#075d36}.incorrect{background:#fff0ef;color:#98251d}.unanswered{background:#fff7e5;color:#795000}
+button{border:0;border-radius:9px;background:var(--blue);color:white;font-weight:700;padding:11px 17px;cursor:pointer;font-size:.95rem}button:hover{filter:brightness(.93)}button.secondary{background:#e8eef7;color:#203b5d}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}.score{font-weight:800;font-size:1.15rem;margin:12px 0}
+footer{text-align:center;padding:25px;color:var(--muted);font-size:.88rem}
+code{background:#eef2f7;padding:2px 5px;border-radius:4px}
+@media(max-width:650px){header{padding:30px 20px}section{padding:17px}table{font-size:.85rem}th,td{padding:7px}}
+@media print{body{background:#fff;font-size:11pt}nav,.actions button{display:none!important}main{max-width:none;margin:0;padding:0}section{box-shadow:none;break-inside:avoid;border:1px solid #bbb;margin:12px 0;padding:16px}header{background:#fff;color:#111;padding:20px;border-bottom:2px solid #333}header p,.eyebrow{color:#333}.meta span{border:1px solid #777;color:#111;background:#fff}a{color:#111}details{break-inside:avoid}details>*{display:block}button{display:none}}
+</style>
+</head>
+<body>
+<header>
+ <div class="eyebrow">Analog Electronics · Operational Amplifier</div>
+ <h1>Active Low-Pass Filter</h1>
+ <p>A guided engineering learning lab for B.E./B.Tech ECE students, GATE aspirants and core-electronics interview preparation.</p>
+ <div class="meta"><span>First-order active LPF</span><span>Op-amp based</span><span>Multisim-oriented study</span><span>Offline interactive notes</span></div>
+ <p><strong>Learning objectives:</strong> explain filter action, analyse the circuit, derive its transfer function, calculate cutoff frequency and gain, interpret frequency response, and solve exam-style problems.</p>
+</header>
+<nav><div class="navinner">
+<a href="#intro">Introduction</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#response">Response</a><a href="#math">Derivation</a><a href="#examples">Solved examples</a><a href="#gate">GATE practice</a><a href="#interview">Interviews</a><a href="#industry">Applications</a><a href="#quiz">10-question quiz</a><a href="#revision">Revision</a>
+</div></nav>
+<main>
+<section id="intro">
+<h2>1. Introduction and learning objectives</h2>
+<p>A <strong>low-pass filter (LPF)</strong> is a frequency-selective circuit that passes signals below a chosen cutoff frequency and attenuates signals above it. In an <strong>active low-pass filter</strong>, an operational amplifier is used with resistors and capacitors to provide buffering and, when configured with feedback, voltage gain as well as frequency selection.</p>
+<div class="grid">
+<div class="tile"><h3>Why it matters</h3><p>LPFs reduce high-frequency noise, limit signal bandwidth, smooth sensor signals and remove unwanted high-frequency components before sampling or further processing.</p></div>
+<div class="tile"><h3>Prerequisites</h3><p>Ohm’s law, impedance, capacitive reactance, phasors, op-amp ideal assumptions, negative feedback and Bode plots.</p></div>
+<div class="tile"><h3>Learning outcomes</h3><p>Identify passband/stopband, derive H(s), calculate f<sub>c</sub>, estimate gain in dB, and explain phase shift and practical limitations.</p></div>
+</div>
+<h3>Key terminology</h3>
+<table><tr><th>Term</th><th>Meaning</th></tr>
+<tr><td>Passband</td><td>Frequency range passed with relatively little attenuation.</td></tr>
+<tr><td>Stopband</td><td>Frequency range in which the signal is substantially attenuated.</td></tr>
+<tr><td>Cutoff frequency, f<sub>c</sub></td><td>For a first-order response, frequency at which magnitude is 1/√2 of passband gain (−3.01 dB).</td></tr>
+<tr><td>Passband gain, A<sub>F</sub></td><td>Low-frequency closed-loop voltage gain of the non-inverting amplifier stage.</td></tr>
+<tr><td>Roll-off</td><td>Attenuation slope; first-order LPF approaches −20 dB/decade (−6 dB/octave).</td></tr>
+<tr><td>Order</td><td>Number of poles; a first-order LPF has one pole and one energy-storage capacitor.</td></tr></table>
+<h3>Classification</h3>
+<ul><li><strong>Passive LPF:</strong> uses R, L and/or C; cannot provide power gain and may load adjacent stages.</li><li><strong>Active LPF:</strong> uses an amplifier with R and C; can provide gain and buffering, but requires power supplies and has finite bandwidth.</li><li><strong>By response/order:</strong> first-order, second-order and higher-order; common response families include Butterworth, Chebyshev, Bessel and elliptic.</li></ul>
+</section>
+
+<section id="circuit">
+<h2>2. Circuit diagram and component functions</h2>
+<p>The example below is a first-order, non-inverting active LPF. An RC low-pass network drives the op-amp’s high-impedance non-inverting input. The op-amp is configured for a non-inverting closed-loop gain.</p>
+<figure>
+<svg viewBox="0 0 900 390" role="img" aria-label="First order active low pass filter circuit">
+<defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="#155eef"/></marker></defs>
+<g stroke="#183b63" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path d="M45 145 H155"/><path d="M155 145 l10 -12 l18 24 l18 -24 l18 24 l18 -24 l18 12 H310"/>
+<path d="M310 145 V205"/><path d="M296 205 H324 M296 216 H324"/><path d="M310 216 V270"/><path d="M292 270 H328 M298 279 H322 M304 288 H316"/>
+<path d="M310 145 H445"/><path d="M445 145 H500"/>
+<path d="M500 110 L500 265 L665 188 Z" fill="#f3f7ff"/>
+<path d="M445 145 H500"/><path d="M470 145 V125 H500"/>
+<path d="M445 145 V235 H500"/>
+<path d="M665 188 H820"/>
+<path d="M735 188 V80 H590 V110"/><path d="M735 80 H700"/>
+<path d="M735 188 V300 H590 V265"/>
+<path d="M590 300 H560"/><path d="M560 300 l10 -10 l18 20 l18 -20 l18 10 H735"/>
+<path d="M560 300 V340"/><path d="M545 340 H575 M551 349 H569 M557 358 H563"/>
+<path d="M500 235 H460"/><path d="M460 235 V300 H520"/>
+</g>
+<g fill="#183b63" font-family="Arial" font-size="18"><text x="45" y="122">Vin</text><text x="170" y="112">R = 10 kΩ</text><text x="330" y="198">C = 10 nF</text><text x="345" y="132">V₁</text><text x="505" y="190" font-size="15">OP-AMP</text><text x="478" y="137">+</text><text x="478" y="229">−</text><text x="685" y="174">Vout</text><text x="620" y="65">Rf = 10 kΩ</text><text x="610" y="326">Rg = 10 kΩ</text><text x="540" y="26" font-size="15">+VCC (e.g. +12 V)</text><text x="535" y="382" font-size="15">−VEE (e.g. −12 V)</text><text x="267" y="314" font-size="15">Ground</text><text x="42" y="170" font-size="14">Input</text></g>
+<g stroke="#087e8b" stroke-width="2" fill="none"><path d="M520 65 V110"/><path d="M520 265 V340"/></g>
+<g fill="#087e8b" font-family="Arial" font-size="14"><text x="530" y="92">Positive supply</text><text x="530" y="291">Negative supply</text></g>
+</svg>
+<figcaption>Figure 1. Conceptual circuit of a first-order active LPF. The op-amp supply pins are shown schematically; connect the actual supply pins according to the selected Multisim op-amp model. The RC node V₁ feeds the non-inverting input. Rf and Rg set the non-inverting gain.</figcaption>
+</figure>
+<div class="callout warn"><strong>Topology note:</strong> The RC network is placed before a high-input-impedance non-inverting amplifier, so it behaves approximately as an unloaded first-order RC low-pass. The idealised transfer function below assumes the op-amp does not load the RC node and has sufficient bandwidth and slew rate.</div>
+<table><tr><th>Component</th><th>Example value</th><th>Function</th></tr>
+<tr><td>R</td><td>10 kΩ</td><td>Forms the series arm of the input RC network.</td></tr>
+<tr><td>C</td><td>10 nF</td><td>Shunts high-frequency components to ground; sets the pole with R.</td></tr>
+<tr><td>R<sub>f</sub></td><td>10 kΩ</td><td>Feedback resistor from output to inverting input.</td></tr>
+<tr><td>R<sub>g</sub></td><td>10 kΩ</td><td>Resistor from inverting input to ground; with Rf sets gain.</td></tr>
+<tr><td>Op-amp</td><td>e.g. μA741 / suitable modern op-amp</td><td>Provides buffering and non-inverting voltage gain. Choose a model compatible with supply and signal levels.</td></tr>
+<tr><td>±V<sub>CC</sub></td><td>Illustrative ±12 V</td><td>Provides operating power; actual limits depend on the chosen device.</td></tr></table>
+</section>
+
+<section id="working">
+<h2>3. Working principle</h2>
+<h3>Step-by-step signal flow</h3>
+<ol><li><strong>Input applied:</strong> V<sub>in</sub> is applied through series resistor R to node V₁.</li><li><strong>Low frequency:</strong> Capacitor reactance X<sub>C</sub>=1/(2πfC) is large. Little current flows through C, so V₁ is close to V<sub>in</sub>.</li><li><strong>High frequency:</strong> X<sub>C</sub> becomes small. More signal current is shunted through C to ground, reducing V₁.</li><li><strong>Amplification/buffering:</strong> The non-inverting op-amp amplifies V₁ by A<sub>F</sub>=1+R<sub>f</sub>/R<sub>g</sub> in the ideal closed-loop model.</li><li><strong>Output:</strong> V<sub>out</sub> follows the low-pass-shaped signal, scaled by A<sub>F</sub>, while the op-amp remains in its linear region.</li></ol>
+<h3>DC and AC behaviour</h3>
+<div class="grid"><div class="tile"><h4>At DC (f = 0)</h4><p>For steady state, an ideal capacitor is open circuit. The RC node is approximately equal to the input DC level. The op-amp output is A<sub>F</sub> times this level, provided it does not saturate.</p></div><div class="tile"><h4>At high frequency</h4><p>The capacitor impedance decreases. The RC node tends toward AC ground, so the output magnitude decreases. The op-amp cannot restore frequencies removed by the RC network.</p></div></div>
+<h3>Operating assumptions</h3>
+<ul><li>Ideal op-amp: very high input impedance, negligible input current, high open-loop gain, and operation with negative feedback.</li><li>Linear operation: output remains between the supply-dependent output swing limits.</li><li>Single-pole model: R and C are ideal and parasitic capacitances/stray inductances are ignored.</li><li>Practical op-amp bandwidth must be comfortably greater than the filter cutoff for the ideal response to be a good approximation.</li></ul>
+<h3>Advantages and limitations</h3>
+<table><tr><th>Advantages</th><th>Limitations</th></tr><tr><td>Can provide voltage gain and buffering; high input impedance; low output impedance; convenient at low and moderate frequencies.</td><td>Requires power supply; op-amp has finite gain-bandwidth product, slew rate, noise and output swing; component tolerances shift cutoff.</td></tr><tr><td>Simple design and easy simulation.</td><td>A first-order filter has a gentle −20 dB/decade stopband slope; stronger rejection needs higher order.</td></tr></table>
+<div class="callout"><strong>Common misconception:</strong> Cutoff frequency is not a brick-wall boundary. A first-order filter is already attenuating at f<sub>c</sub>; at cutoff the amplitude is 70.7% of its passband value.</div>
+</section>
+
+<section id="response">
+<h2>4. Waveforms and frequency response</h2>
+<p>The illustrations below show the ideal first-order response. They are theoretical illustrations, not measured Multisim results.</p>
+<div class="grid">
+<figure><svg viewBox="0 0 500 270" role="img" aria-label="Illustrative time-domain input and output waveforms"><path d="M45 20 V225 H475" stroke="#334b68" stroke-width="2" fill="none"/><path d="M45 120 C65 35 85 35 105 120 S145 205 165 120 S205 35 225 120 S265 205 285 120 S325 35 345 120 S385 205 405 120 S445 35 465 120" fill="none" stroke="#155eef" stroke-width="3"/><path d="M45 120 C75 75 105 75 135 120 S195 165 225 120 S285 75 315 120 S375 165 405 120 S445 90 465 120" fill="none" stroke="#087e8b" stroke-width="3"/><g fill="#334b68" font-size="13"><text x="8" y="24">V</text><text x="460" y="246">t</text><text x="275" y="25" fill="#155eef">Input (higher f)</text><text x="275" y="45" fill="#087e8b">Output (attenuated)</text></g></svg><figcaption>Figure 2. Illustrative high-frequency sinusoidal input and attenuated output. The output amplitude is smaller and has a phase lag.</figcaption></figure>
+<figure><svg viewBox="0 0 500 270" role="img" aria-label="First order low pass Bode magnitude plot"><path d="M48 20 V225 H475" stroke="#334b68" stroke-width="2" fill="none"/><path d="M48 72 H245 L270 76 L300 91 L340 123 L380 158 L430 195 L465 211" fill="none" stroke="#155eef" stroke-width="3"/><path d="M245 20 V225" stroke="#d18b00" stroke-dasharray="6 5" stroke-width="2"/><g fill="#334b68" font-size="13"><text x="7" y="22">Gain</text><text x="8" y="76">0 dB*</text><text x="8" y="145">−20</text><text x="8" y="212">−40</text><text x="435" y="248">log f</text><text x="224" y="244" fill="#9a6700">f<tspan baseline-shift="sub">c</tspan></text><text x="280" y="55">−20 dB/dec</text><text x="50" y="263">*Normalised to passband</text></g><circle cx="245" cy="76" r="5" fill="#d18b00"/></svg><figcaption>Figure 3. Normalised magnitude sketch. At f<sub>c</sub>, the gain is 3.01 dB below the passband level; the asymptotic high-frequency slope is −20 dB/decade.</figcaption></figure>
+</div>
+<h3>Magnitude and phase facts</h3>
+<ul><li>Magnitude ratio: |H(jω)| = A<sub>F</sub>/√(1+(ωRC)²).</li><li>Phase: φ = −tan⁻¹(ωRC). It approaches 0° at low frequency and −90° at very high frequency.</li><li>At cutoff: magnitude = A<sub>F</sub>/√2 and phase = −45°.</li></ul>
+</section>
+
+<section id="math">
+<h2>5. Mathematical equations and derivation</h2>
+<h3>Step 1: RC network transfer function</h3>
+<p>For a capacitor, Z<sub>C</sub>=1/(sC). By the voltage-divider relation:</p>
+<div class="eq">V₁(s)/V<sub>in</sub>(s) = Z<sub>C</sub>/(R + Z<sub>C</sub>) = 1/(1+sRC)</div>
+<h3>Step 2: Non-inverting op-amp gain</h3>
+<div class="eq">A<sub>F</sub> = 1 + R<sub>f</sub>/R<sub>g</sub></div>
+<p>Assuming the op-amp input does not load the RC network, V<sub>out</sub>=A<sub>F</sub>V₁. Therefore:</p>
+<div class="eq">H(s) = V<sub>out</sub>(s)/V<sub>in</sub>(s) = A<sub>F</sub>/(1+sRC)</div>
+<h3>Step 3: Cutoff frequency</h3>
+<p>Set s=jω. The magnitude is A<sub>F</sub>/√(1+(ωRC)²). At cutoff it equals A<sub>F</sub>/√2:</p>
+<div class="eq">1 + (ω<sub>c</sub>RC)² = 2 &nbsp; ⇒ &nbsp; ω<sub>c</sub> = 1/RC</div>
+<div class="eq">f<sub>c</sub> = 1/(2πRC) &nbsp;&nbsp; and &nbsp;&nbsp; τ = RC</div>
+<h3>Useful equations</h3>
+<table><tr><th>Quantity</th><th>Equation</th><th>Notes / units</th></tr>
+<tr><td>Capacitive reactance</td><td>X<sub>C</sub>=1/(2πfC)</td><td>Ohms; f in Hz, C in F.</td></tr>
+<tr><td>Cutoff frequency</td><td>f<sub>c</sub>=1/(2πRC)</td><td>Hz; R in Ω, C in F.</td></tr>
+<tr><td>Magnitude</td><td>|H|=A<sub>F</sub>/√(1+(f/f<sub>c</sub>)²)</td><td>Voltage ratio.</td></tr>
+<tr><td>Gain in dB</td><td>G<sub>dB</sub>=20 log<sub>10</sub>|H|</td><td>Voltage gain in decibels.</td></tr>
+<tr><td>Phase</td><td>φ=−tan⁻¹(f/f<sub>c</sub>)</td><td>Degrees or radians.</td></tr>
+<tr><td>Non-inverting gain</td><td>A<sub>F</sub>=1+R<sub>f</sub>/R<sub>g</sub></td><td>Dimensionless; ideal closed-loop model.</td></tr></table>
+<div class="callout success"><strong>At f = f<sub>c</sub>:</strong> |H|=0.707A<sub>F</sub>; gain is 3.01 dB below passband gain; phase is −45°. For f ≫ f<sub>c</sub>, attenuation approaches 20 dB per decade.</div>
+<h3>Design considerations</h3>
+<ul><li>Choose R and C using f<sub>c</sub>=1/(2πRC). Very large R increases thermal-noise and bias-current error sensitivity; very small R loads the source.</li><li>Check op-amp gain-bandwidth product, input common-mode range, output swing, supply voltage and slew rate.</li><li>Use precision components when cutoff tolerance matters. For independent small tolerances, approximate relative cutoff error is Δf<sub>c</sub>/f<sub>c</sub> ≈ −(ΔR/R + ΔC/C).</li><li>For a higher-order filter, cascade stages carefully; stage loading and gain distribution can change the response.</li></ul>
+</section>
+
+<section id="examples">
+<h2>6. Solved numerical problems</h2>
+<div class="tile"><span class="pill easy">Example 1 · Basic</span><h3>Find the cutoff frequency</h3><p><strong>Given:</strong> R=10 kΩ, C=10 nF. <strong>Find:</strong> f<sub>c</sub>.</p><p><strong>Formula:</strong> f<sub>c</sub>=1/(2πRC).</p><p><strong>Substitution:</strong> RC=(10×10³)(10×10⁻⁹)=100×10⁻⁶ s=100 μs.</p><div class="eq">f<sub>c</sub> = 1/(2π × 100 μs) ≈ 1.592 kHz</div><p><strong>Interpretation:</strong> Signals near 1.592 kHz are 3.01 dB below the passband level.</p></div>
+<div class="tile"><span class="pill moderate">Example 2 · Gain and output</span><h3>Calculate passband gain and output at cutoff</h3><p><strong>Given:</strong> Rf=20 kΩ, Rg=10 kΩ, Vin=0.2 V peak, and input frequency is well below cutoff.</p><p>A<sub>F</sub>=1+20/10=3. In the passband, Vout≈3×0.2=0.6 V peak.</p><p>At cutoff, Vout peak = 0.6/√2 = 0.424 V.</p><div class="eq">A<sub>F</sub>=3; &nbsp; V<sub>out,fc</sub>≈0.424 V peak</div><p><strong>Interpretation:</strong> Cutoff is defined relative to the passband output, not relative to the input.</p></div>
+<div class="tile"><span class="pill hard">Example 3 · GATE-style numerical</span><h3>Find output magnitude at twice cutoff</h3><p><strong>Given:</strong> A<sub>F</sub>=2, f<sub>c</sub>=1 kHz, input=1 V rms, f=2 kHz. <strong>Find:</strong> output rms magnitude.</p><p>|H|=A<sub>F</sub>/√(1+(f/f<sub>c</sub>)²)=2/√5=0.8944.</p><div class="eq">V<sub>out</sub> = 0.8944 × 1 V = 0.894 V rms</div><p><strong>Interpretation:</strong> Output is less than the passband value (2 V rms) but not zero. Phase lag is −tan⁻¹(2)=−63.4°.</p></div>
+<div class="callout"><strong>Useful shortcut:</strong> At f=10f<sub>c</sub>, the exact magnitude is A<sub>F</sub>/√101 ≈ 0.0995A<sub>F</sub>, close to one-tenth of passband gain (−20 dB). The asymptotic approximation is useful far above cutoff.</div>
+</section>
+
+<section id="gate">
+<h2>7. GATE examination preparation</h2>
+<p>These are original practice questions, not claimed previous-year GATE questions. Select an answer to reveal the explanation.</p>
+<div id="gateQuestions"></div>
+</section>
+
+<section id="interview">
+<h2>8. Core electronics company interview preparation</h2>
+<p>Use the expandable answers to practise concise technical explanations. Follow-up prompts are included where useful.</p>
+<div id="interviewList"></div>
+</section>
+
+<section id="industry">
+<h2>9. Applications and industry relevance</h2>
+<div class="grid">
+<div class="tile"><h3>Sensor conditioning</h3><p>Reduces high-frequency noise on temperature, pressure, light and other sensor outputs before ADC conversion.</p></div>
+<div class="tile"><h3>Audio electronics</h3><p>Acts as a tone-control or anti-noise stage, and limits bandwidth in audio signal paths. Audio crossover designs often use higher-order filters.</p></div>
+<div class="tile"><h3>Data acquisition</h3><p>Anti-aliasing filters attenuate frequency components above the useful band before sampling. The required cutoff depends on sampling rate and transition-band needs.</p></div>
+<div class="tile"><h3>Instrumentation</h3><p>Filters unwanted high-frequency interference in measurement and signal-conditioning circuits.</p></div>
+</div>
+<h3>Industry design and validation workflow</h3>
+<ol><li>Translate signal bandwidth and noise requirements into a target cutoff and attenuation specification.</li><li>Select filter order and response family based on passband flatness, phase response and transition steepness.</li><li>Calculate nominal component values and check op-amp noise, bandwidth, swing, supply and loading.</li><li>Simulate AC sweep, transient response and operating point; then prototype and measure with a signal generator and oscilloscope/network analyser.</li><li>Compare measured cutoff and gain against tolerance limits; document deviations and verify across temperature and supply conditions where required.</li></ol>
+<h3>Multisim simulation guide</h3>
+<ol><li>Place an op-amp, resistors, capacitor, ground and suitable DC supply rails.</li><li>Wire the RC node to the non-inverting input. Connect Rf from output to the inverting input and Rg from the inverting input to ground.</li><li>Set component values (for example R=10 kΩ, C=10 nF, Rf=Rg=10 kΩ) and choose an op-amp whose supply and bandwidth suit the test.</li><li>Run an AC frequency sweep over a range spanning below and above the expected cutoff (about 1.59 kHz for the example RC values).</li><li>Plot output/input magnitude in dB and phase. Confirm passband gain near 6.02 dB, −3.01 dB relative to passband at cutoff, and an eventual −20 dB/decade slope.</li><li>Run transient analysis with a low-frequency sine and a frequency well above cutoff; compare input and output amplitudes and phase.</li></ol>
+<div class="callout warn"><strong>Simulation note:</strong> This page contains illustrative theoretical plots only. No Multisim screenshot was attached, so no simulated measurements are claimed. Actual results depend on the selected op-amp model, supply rails, source impedance, component models and analysis settings.</div>
+<h3>Relevant job roles</h3>
+<p>Analog design engineer, mixed-signal design engineer, hardware validation/test engineer, electronics R&amp;D engineer, instrumentation engineer, embedded hardware engineer and semiconductor product/test engineer.</p>
+</section>
+
+<section id="quiz">
+<h2>10. Interactive topic quiz · 10 questions</h2>
+<p>Choose one answer for each question. Submit to see your score, percentage, and an explanation for every question. Unanswered questions are counted as incorrect and clearly marked.</p>
+<div id="quizQuestions"></div>
+<div class="actions"><button onclick="gradeQuiz()">Check Answers</button><button class="secondary" onclick="resetQuiz()">Reset Quiz</button></div>
+<div id="quizResult" aria-live="polite"></div>
+</section>
+
+<section id="revision">
+<h2>11. Quick revision materials</h2>
+<h3>Formula sheet</h3>
+<div class="eq">A<sub>F</sub>=1+R<sub>f</sub>/R<sub>g</sub> &nbsp; | &nbsp; f<sub>c</sub>=1/(2πRC) &nbsp; | &nbsp; H(s)=A<sub>F</sub>/(1+sRC)</div>
+<div class="eq">|H(jω)|=A<sub>F</sub>/√(1+(ωRC)²) &nbsp; | &nbsp; φ=−tan⁻¹(ωRC)</div>
+<div class="eq">G<sub>dB</sub>=20log<sub>10</sub>|H| &nbsp; | &nbsp; slope = −20 dB/decade per pole</div>
+<h3>High-priority GATE and interview points</h3>
+<ul><li>At cutoff, magnitude is 0.707 of passband gain, not 0.5.</li><li>At cutoff, phase shift for a first-order LPF is −45°.</li><li>Each first-order pole contributes −20 dB/decade asymptotic roll-off.</li><li>Increasing R or C decreases cutoff frequency; doubling either halves f<sub>c</sub>.</li><li>For voltage ratios use 20 log<sub>10</sub>; for power ratios use 10 log<sub>10</sub>.</li><li>The active stage can amplify in the passband, but it cannot recover frequencies attenuated by the RC network.</li></ul>
+<h3>Comparison with related filters</h3>
+<table><tr><th>Filter</th><th>Passes</th><th>Attenuates</th><th>Typical use</th></tr><tr><td>Low-pass</td><td>Below cutoff</td><td>Above cutoff</td><td>Noise reduction / anti-aliasing</td></tr><tr><td>High-pass</td><td>Above cutoff</td><td>Below cutoff</td><td>AC coupling / baseline removal</td></tr><tr><td>Band-pass</td><td>Between two cutoffs</td><td>Below and above band</td><td>Channel selection</td></tr><tr><td>Band-stop</td><td>Below and above stop band</td><td>Within a band</td><td>Interference rejection</td></tr></table>
+<h3>Common errors and troubleshooting</h3>
+<table><tr><th>Symptom / mistake</th><th>Likely cause / correction</th></tr><tr><td>Wrong cutoff by a factor of 1000</td><td>Unit conversion error: convert kΩ to Ω and nF to F.</td></tr><tr><td>No output or clipped waveform</td><td>Check supply rails, ground reference, pin connections and input amplitude.</td></tr><tr><td>Unexpected cutoff</td><td>Check actual R/C values, source resistance, loading and component tolerances.</td></tr><tr><td>Gain differs from calculation</td><td>Check Rf/Rg wiring, op-amp finite bandwidth, output loading and saturation.</td></tr><tr><td>Confusing −3 dB</td><td>It means amplitude ratio 0.707, or power ratio 0.5, relative to passband.</td></tr></table>
+<h3>Memory aid</h3><p><strong>“Low goes, high is shunted.”</strong> At low frequency the capacitor is nearly open; at high frequency it offers a low impedance path to ground.</p>
+</section>
+</main>
+<footer>Analog Electronics Learning Lab · Active first-order low-pass filter · Self-contained offline study resource</footer>
+<script>
+const gateData = [
+{d:"Easy",q:"For an ideal first-order low-pass filter, the magnitude at cutoff is:",o:["0.5 of passband gain","0.707 of passband gain","Equal to passband gain","Zero"],a:1,e:"At cutoff, |H|=A_F/√2≈0.707A_F, which is −3.01 dB. A 0.5 amplitude ratio would be −6.02 dB."},
+{d:"Easy",q:"The asymptotic magnitude slope of a first-order LPF above its pole is:",o:["+20 dB/decade","−10 dB/decade","−20 dB/decade","−40 dB/decade"],a:2,e:"One pole contributes −20 dB/decade (approximately −6 dB/octave) in the stopband asymptote."},
+{d:"Moderate",q:"If R is doubled while C is unchanged, the cutoff frequency:",o:["Doubles","Halves","Remains unchanged","Becomes four times"],a:1,e:"f_c=1/(2πRC). Doubling R doubles the denominator, so f_c becomes half."},
+{d:"Moderate",q:"For R=10 kΩ and C=10 nF, the cutoff frequency is closest to:",o:["159 Hz","1.59 kHz","15.9 kHz","159 kHz"],a:1,e:"RC=100 μs; f_c=1/(2π×100 μs)=1.592 kHz."},
+{d:"Moderate",q:"The phase shift of an ideal first-order low-pass filter at cutoff is:",o:["0°","−45°","−90°","+45°"],a:1,e:"φ=−tan⁻¹(ωRC). At cutoff ωRC=1, hence φ=−45°."},
+{d:"Moderate",q:"A non-inverting op-amp has Rf=30 kΩ and Rg=10 kΩ. Its ideal passband gain is:",o:["3","4","−3","−4"],a:1,e:"A_F=1+Rf/Rg=1+30/10=4. The non-inverting gain is positive."},
+{d:"Difficult",q:"An active LPF has passband gain 2. At f=fc, its output magnitude for a 0.5 V rms input is:",o:["0.25 V","0.5 V","0.707 V","1.0 V"],a:2,e:"At cutoff |H|=2/√2=1.414. Output=1.414×0.5=0.707 V rms."},
+{d:"Difficult",q:"At a frequency much greater than cutoff, the ideal first-order LPF phase tends toward:",o:["0°","−45°","−90°","−180°"],a:2,e:"As f/fc tends to infinity, −tan⁻¹(f/fc) tends to −90°."},
+{d:"Difficult",q:"Which condition best supports the ideal RC transfer-function approximation in an active LPF?",o:["Op-amp input impedance is low","Op-amp loads the capacitor node heavily","Op-amp input impedance is high and its bandwidth is adequate","Op-amp is intentionally saturated"],a:2,e:"A high input impedance prevents loading of the RC network. Adequate op-amp bandwidth keeps its own response from dominating the filter."},
+{d:"Difficult",q:"A first-order LPF has fc=2 kHz and AF=1. At 20 kHz, its magnitude is closest to:",o:["0.707","0.5","0.0995","0.01"],a:2,e:"f/fc=10. |H|=1/√(1+10²)=1/√101≈0.0995."}
+];
+function renderGate(){
+ const root=document.getElementById('gateQuestions');
+ root.innerHTML=gateData.map((q,i)=>`<details><summary>Q${i+1}. ${q.q} <span class="pill ${q.d==='Easy'?'easy':q.d==='Moderate'?'moderate':'hard'}">${q.d}</span></summary><div class="options">${q.o.map((v,j)=>`<div>${String.fromCharCode(65+j)}. ${v}</div>`).join('')}</div><p><strong>Answer: ${String.fromCharCode(65+q.a)}.</strong> ${q.e}</p></details>`).join('');
+}
+const interviewData=[
+["What is a low-pass filter?","A circuit that passes low-frequency signals and attenuates high-frequency signals beyond its cutoff region. Its response is frequency selective."],
+["Why use an active rather than passive LPF?","An active LPF can provide voltage gain and buffering, reducing loading between stages. It needs a power supply and is limited by op-amp bandwidth, noise and output swing."],
+["What does cutoff frequency mean?","For a first-order filter, it is the frequency where magnitude is 1/√2 of passband magnitude, corresponding to −3.01 dB."],
+["Derive the first-order RC low-pass transfer function.","Using ZC=1/(sC), the divider gives Vc/Vin=ZC/(R+ZC)=1/(1+sRC). With a non-inverting amplifier of gain AF, H(s)=AF/(1+sRC), assuming negligible loading."],
+["How does changing C affect the cutoff?","Since fc=1/(2πRC), increasing C decreases cutoff frequency. Doubling C halves fc."],
+["Why is the output phase lagging?","The capacitor introduces a frequency-dependent phase shift. For a first-order LPF the phase is −tan⁻¹(f/fc), reaching −45° at cutoff."],
+["How would you verify the cutoff in Multisim?","Run AC analysis, plot output-to-input magnitude in dB, identify the frequency 3.01 dB below passband gain, and confirm phase is near −45° for the ideal first-order case."],
+["The measured cutoff is lower than calculated. What would you check?","Check actual R and C values, source resistance, loading, wiring, parasitic capacitance and whether the sweep plot uses the correct input/output ratio."],
+["Why might the output clip even when the filter calculation is correct?","The op-amp may be outside its output swing or common-mode range, supplied incorrectly, driven beyond its linear range, or limited by slew rate."],
+["What is the purpose of an anti-aliasing LPF before an ADC?","It attenuates out-of-band components that could fold into the sampled band. The cutoff and filter order must be selected with the sampling rate and transition band in mind."]
+];
+document.getElementById('interviewList').innerHTML=interviewData.map((x,i)=>`<details><summary>Q${i+1}. ${x[0]}</summary><p>${x[1]}</p><p class="small"><strong>Possible follow-up:</strong> Explain how you would verify this on a bench or in simulation.</p></details>`).join('');
+const quizData=[
+{q:"A low-pass filter ideally passes:",o:["High frequencies only","Low frequencies and attenuates high frequencies","Only one frequency","All frequencies equally"],a:1,e:"An LPF passes the low-frequency region and attenuates components above its cutoff."},
+{q:"The cutoff formula for a single-pole RC LPF is:",o:["RC/2π","2πRC","1/(2πRC)","1/RC²"],a:2,e:"The pole angular frequency is 1/RC, so fc=1/(2πRC)."},
+{q:"For R=1 kΩ and C=0.1 μF, fc is approximately:",o:["159 Hz","1.59 kHz","15.9 kHz","159 kHz"],a:1,e:"RC=100 μs. Therefore fc≈1/(628.3 μs)=1.592 kHz."},
+{q:"At cutoff, the output amplitude relative to passband is:",o:["50%","70.7%","100%","0%"],a:1,e:"The magnitude falls to 1/√2≈0.707 of the passband value."},
+{q:"The first-order LPF phase at cutoff is:",o:["+90°","0°","−45°","−180°"],a:2,e:"At ωRC=1, phase=−tan⁻¹(1)=−45°."},
+{q:"For a non-inverting op-amp, closed-loop gain is:",o:["1−Rf/Rg","Rf/Rg","1+Rf/Rg","−Rf/Rg"],a:2,e:"The ideal non-inverting gain is 1+Rf/Rg."},
+{q:"If both R and C are doubled, fc becomes:",o:["Twice","Half","One-fourth","Unchanged"],a:2,e:"The product RC becomes four times larger, so cutoff becomes one-fourth."},
+{q:"The high-frequency asymptotic slope for one pole is:",o:["+20 dB/decade","−20 dB/decade","−40 dB/decade","0 dB/decade"],a:1,e:"Each first-order pole contributes −20 dB/decade."},
+{q:"Which is a common LPF application?",o:["Anti-aliasing before an ADC","Generating a clock edge","Increasing DC frequency","Digital encryption"],a:0,e:"An anti-aliasing filter attenuates unwanted high-frequency components before sampling."},
+{q:"A practical op-amp LPF output clips. A likely check is:",o:["Ignore supply pins","Check supply rails and output swing","Increase frequency indefinitely","Remove all ground connections"],a:1,e:"The op-amp must be correctly powered and remain within its input/output operating limits."}
+];
+function renderQuiz(){
+ document.getElementById('quizQuestions').innerHTML=quizData.map((q,i)=>`<fieldset class="question" id="qbox${i}"><legend>${i+1}. ${q.q}</legend><div class="options">${q.o.map((v,j)=>`<label><input type="radio" name="q${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${v}</span></label>`).join('')}</div><div class="feedback" id="fb${i}" hidden></div></fieldset>`).join('');
+}
+function gradeQuiz(){
+ let score=0,answered=0;
+ quizData.forEach((q,i)=>{
+ const sel=document.querySelector(`input[name="q${i}"]:checked`);
+ const fb=document.getElementById(`fb${i}`);fb.hidden=false;
+ if(!sel){fb.className='feedback unanswered';fb.textContent='Unanswered — counted as incorrect. '+q.e;return;}
+ answered++;const val=Number(sel.value);
+ if(val===q.a){score++;fb.className='feedback correct';fb.textContent='Correct. '+q.e;}
+ else{fb.className='feedback incorrect';fb.textContent='Incorrect. Correct answer: '+String.fromCharCode(65+q.a)+'. '+q.e;}
+ });
+ const pct=score*10;
+ document.getElementById('quizResult').innerHTML=`<div class="score">Score: ${score}/10 · ${pct}% · Answered: ${answered}/10</div><p>${score>=8?'Strong work — review any missed explanations.':score>=5?'Good attempt — revise the equations and try again.':'Revisit the working principle and formula sheet, then retry.'}</p>`;
+}
+function resetQuiz(){document.querySelectorAll('#quizQuestions input').forEach(x=>x.checked=false);document.querySelectorAll('#quizQuestions .feedback').forEach(x=>{x.hidden=true;x.textContent=''});document.getElementById('quizResult').innerHTML='';}
+renderGate();renderQuiz();
+</script>
+</body></html>
